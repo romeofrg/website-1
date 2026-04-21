@@ -1,0 +1,79 @@
+:root {
+    --accent: #D4AF37; /* Premium Gold */
+    --bg: #000000;    /* Tiefschwarz */
+    --glass: rgba(255, 255, 255, 0.05);
+}
+
+html { 
+    scroll-behavior: smooth; 
+}
+
+body { 
+    background-color: var(--bg); 
+    color: #ffffff; 
+    font-family: 'Inter', sans-serif; 
+    overflow-x: hidden; 
+}
+
+/* Verhindert Scrollen bei offenem Mobile-Menü */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Glassmorphism Effekt */
+.glass {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gold-Verlauf für Texte */
+.gradient-text {
+    background: linear-gradient(to right, #ffffff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Service Card Hover Effekt */
+.service-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.service-card:hover { 
+    border-color: var(--accent); 
+    transform: translateY(-5px);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+/* Select/Dropdown Styling für bessere Lesbarkeit */
+select {
+    color-scheme: dark;
+}
+
+select option {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 8px;
+}
+
+select option:checked {
+    background: linear-gradient(#D4AF37, #D4AF37);
+    background-color: #D4AF37 !important;
+    color: #000000 !important;
+}
+
+/* Input/Textarea Styling */
+input, textarea, select {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[x-cloak] { display: none !important; }
