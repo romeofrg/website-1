@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kontakt | Folientechnik Sonntag</title>
-    <meta name="description" content="Kontaktieren Sie Folientechnik Sonntag für eine unverbindliche Beratung. Premium Fahrzeugfolierung in Bad Marienberg.">
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         [x-cloak] { display: none !important; }
         .no-scroll { overflow: hidden !important; }
@@ -55,7 +55,14 @@
         if (!this.formData.name.trim()) this.formErrors.name = 'Name ist erforderlich';
         if (!this.formData.email.trim()) this.formErrors.email = 'E-Mail ist erforderlich';
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email)) this.formErrors.email = 'Ungültige E-Mail';
-        if (!this.formData.message.trim()) this.formErrors.message = 'Nachricht ist erforderlich';
+        
+        const messageText = this.formData.message.trim();
+        if (!messageText) {
+            this.formErrors.message = 'Nachricht ist erforderlich';
+        } else if (messageText.split(/\s+/).length > 50) {
+            this.formErrors.message = 'Maximum 50 Wörter überschritten';
+        }
+        
         return Object.keys(this.formErrors).length === 0;
     },
     submitForm() {
@@ -70,33 +77,32 @@
 @scroll.window="scrolled = (window.pageYOffset > 50)" 
 :class="mobileMenu ? 'no-scroll' : ''"
 x-cloak 
-class="bg-black text-white noise">
+class="bg-black text-white">
 
-    <!-- ============ NAVIGATION ============ -->
-    <nav :class="scrolled ? 'glass-strong py-3' : 'py-6 lg:py-8'" 
-         class="fixed top-0 left-0 w-full z-[100] transition-all duration-500 px-5 lg:px-16 flex justify-between items-center">
-        <a href="index.html" class="block z-[120] group">
+    <!-- Navigation -->
+    <nav :class="scrolled ? 'glass py-3' : 'py-5 lg:py-8'" 
+         class="fixed top-0 left-0 w-full z-[100] transition-all duration-500 px-4 lg:px-20 flex justify-between items-center">
+        <a href="index.html" class="block z-[120]">
             <img src="logo.png" alt="Folientechnik Sonntag" 
                  :class="scrolled ? 'h-8 lg:h-10' : 'h-10 lg:h-14'" 
-                 class="w-auto transition-all duration-500 object-contain group-hover:brightness-110">
+                 class="w-auto transition-all duration-500 object-contain">
         </a>
         
-        <div class="hidden md:flex items-center gap-10 text-[11px] font-semibold uppercase tracking-[0.2em]">
-            <a href="index.html#services" class="nav-link text-white">Leistungen</a>
-            <a href="schulungen.html" class="nav-link text-white">Schulungen</a>
-            <a href="kontakt.html" class="nav-link text-white">Kontakt</a>
-            <a href="kontakt.html" class="nav-cta border border-white/20 text-white px-6 py-2.5 rounded-full relative z-10">Anfrage</a>
+        <div class="hidden md:flex items-center space-x-10 text-xs font-bold uppercase tracking-widest">
+            <a href="index.html#services" class="hover:text-[var(--accent)] transition text-white">Leistungen</a>
+            <a href="schulungen.html" class="hover:text-[var(--accent)] transition text-white">Schulungen</a>
+            <a href="kontakt.html" class="bg-white text-black px-6 py-2 rounded-full hover:bg-[var(--accent)] hover:text-white transition-colors uppercase">Kontakt</a>
         </div>
 
         <button @click="mobileMenu = !mobileMenu" class="md:hidden z-[120] text-white focus:outline-none p-2">
             <template x-if="!mobileMenu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                 </svg>
             </template>
             <template x-if="mobileMenu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </template>
         </button>
@@ -110,153 +116,133 @@ class="bg-black text-white noise">
              x-transition:leave-end="opacity-0"
              class="fixed inset-0 w-full h-screen flex flex-col items-center justify-center md:hidden"
              style="position: fixed !important; top: 0 !important; left: 0 !important; background-color: #000000 !important; z-index: 110 !important;">
-            <div class="flex flex-col items-center space-y-10 text-xl font-semibold uppercase tracking-[0.25em]">
-                <a href="index.html#services" @click="mobileMenu = false" class="text-white hover:text-[var(--accent)] transition-colors duration-300">Leistungen</a>
-                <a href="schulungen.html" @click="mobileMenu = false" class="text-white hover:text-[var(--accent)] transition-colors duration-300">Schulungen</a>
-                <a href="kontakt.html" @click="mobileMenu = false" class="text-white hover:text-[var(--accent)] transition-colors duration-300">Kontakt</a>
-                <a href="kontakt.html" @click="mobileMenu = false" class="border border-[var(--accent)] text-[var(--accent)] px-10 py-3.5 rounded-full transition-all duration-300 hover:bg-[var(--accent)] hover:text-black mt-4">Anfrage</a>
+            <div class="flex flex-col items-center space-y-12 text-2xl font-bold uppercase tracking-[0.2em]">
+                <a href="index.html#services" @click="mobileMenu = false" class="text-white hover:text-[var(--accent)] transition">Leistungen</a>
+                <a href="schulungen.html" @click="mobileMenu = false" class="text-white hover:text-[var(--accent)] transition">Schulungen</a>
+                <a href="kontakt.html" @click="mobileMenu = false" style="border-color: var(--accent); color: var(--accent);" class="border-2 px-12 py-4 rounded-full transition active:bg-[var(--accent)] active:text-black">Kontakt</a>
             </div>
         </div>
     </nav>
 
-    <!-- ============ HERO ============ -->
-    <section class="relative min-h-[70vh] flex items-center overflow-hidden pt-20">
-        <!-- Background elements for text readability -->
-        <div class="absolute top-0 left-0 w-full lg:w-3/5 h-full bg-gradient-to-r from-black via-black/90 to-transparent z-10"></div>
-        <div class="absolute inset-0 bg-black/40 z-10 lg:hidden"></div>
-        
-        <!-- Big Picture (Right side on desktop, background on mobile) -->
-        <div class="absolute inset-0 lg:left-1/3">
-            <div class="absolute inset-0 bg-[url('home1.png')] bg-cover bg-center lg:bg-right opacity-60 lg:opacity-100 scale-100 transition-transform duration-10000 hover:scale-105"></div>
-            <!-- Gradient to blend the image edge -->
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent hidden lg:block"></div>
-        </div>
-
-        <!-- Decorative lines -->
-        <div class="absolute top-1/4 left-0 w-full gold-line z-20"></div>
-
-        <div class="relative z-30 w-full px-6 py-32">
-            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center">
-                <div class="w-full lg:w-3/5 text-left">
-                    <div class="hero-badge glass mb-6 animate-fade-in-up" style="opacity: 0;">DIREKTKONTAKT</div>
-                    <h1 class="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-[7rem] gradient-text animate-fade-in-up delay-200" style="opacity: 0;">Kontakt</h1>
-                    <p class="hero-subtitle mt-4 sm:mt-6 max-w-lg text-sm md:text-base animate-fade-in-up delay-300 text-white font-medium" style="opacity: 0;">Wir freuen uns auf Ihre Anfrage</p>
-                </div>
-                <div class="w-full lg:w-2/5"></div>
-            </div>
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('home1.png')] bg-cover bg-center opacity-20 scale-110"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black"></div>
+        <div class="relative z-10 text-center px-4">
+            <span class="inline-block px-3 py-1 glass rounded-full text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs font-bold tracking-widest mb-4 sm:mb-6 animate__animated animate__fadeInDown text-[var(--accent)]">DIREKTKONTAKT</span>
+            <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black gradient-text animate__animated animate__zoomIn leading-tight uppercase">Kontakt</h1>
+            <p class="mt-4 sm:mt-6 text-gray-400 max-w-2xl mx-auto text-xs sm:text-sm md:text-base lg:text-lg italic">Wir freuen uns auf Ihre Anfrage</p>
         </div>
     </section>
 
-    <div class="gold-line-animated mx-6 lg:mx-16"></div>
-
-    <!-- ============ CONTACT SECTION ============ -->
-    <section class="py-20 md:py-28 lg:py-36 px-5 sm:px-6 lg:px-16">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
+    <!-- Contact Section -->
+    <section class="py-16 md:py-20 lg:py-32 px-4 sm:px-6 lg:px-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
             
             <!-- Contact Info -->
             <div class="order-2 lg:order-1">
-                <span class="section-label">Erreichbarkeit</span>
-                <h2 class="section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-10 lg:mb-14">Unsere <span style="color: var(--accent)">Kontaktdaten.</span></h2>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-8 lg:mb-12 text-white uppercase">Unsere <span style="color: var(--accent)">Kontaktdaten.</span></h2>
                 
-                <div class="space-y-8">
-                    <div class="group">
-                        <p class="text-[9px] uppercase text-gray-600 mb-2 tracking-[0.25em] font-semibold">Besuchen Sie uns</p>
-                        <p class="text-base md:text-lg text-white font-medium" x-text="data.company?.address"></p>
-                        <p class="text-base md:text-lg text-gray-300" x-text="data.company?.city"></p>
-                    </div>
+                <div class="mb-8 pb-8 border-b border-white/10">
+                    <p class="text-[10px] uppercase text-gray-500 mb-2 tracking-widest font-bold">Besuchen Sie uns</p>
+                    <p class="text-base md:text-lg lg:text-xl text-white font-semibold" x-text="data.company?.address"></p>
+                    <p class="text-base md:text-lg lg:text-xl text-white" x-text="data.company?.city"></p>
+                </div>
+                
 
-                    <div class="w-full h-px bg-white/5"></div>
-                    
-                    <div class="group">
-                        <p class="text-[9px] uppercase text-gray-600 mb-2 tracking-[0.25em] font-semibold">Telefon</p>
-                        <a :href="'tel:' + data.company?.phone" class="text-base md:text-lg text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium" x-text="data.company?.phone"></a>
-                    </div>
 
-                    <div class="w-full h-px bg-white/5"></div>
-                    
-                    <div class="group">
-                        <p class="text-[9px] uppercase text-gray-600 mb-2 tracking-[0.25em] font-semibold">Mobil</p>
-                        <a :href="'tel:' + data.company?.mobile" class="text-base md:text-lg text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium" x-text="data.company?.mobile"></a>
+                <div class="mb-8 pb-8 border-b border-white/10 flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] uppercase text-gray-500 mb-2 tracking-widest font-bold">Mobil & WhatsApp</p>
+                        <a :href="'tel:' + data.company?.mobile" class="text-base md:text-lg lg:text-xl text-white hover:text-[var(--accent)] transition font-semibold" x-text="data.company?.mobile"></a>
                     </div>
-
-                    <div class="w-full h-px bg-white/5"></div>
                     
-                    <div class="group">
-                        <p class="text-[9px] uppercase text-gray-600 mb-2 tracking-[0.25em] font-semibold">E-Mail</p>
-                        <a :href="'mailto:' + data.company?.email" class="text-base md:text-lg text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium break-all" x-text="data.company?.email"></a>
-                    </div>
-
-                    <div class="w-full h-px bg-white/5"></div>
-                    
-                    <div class="group">
-                        <p class="text-[9px] uppercase text-gray-600 mb-3 tracking-[0.25em] font-semibold">Öffnungszeiten</p>
-                        <p class="text-sm md:text-base text-white font-medium" x-text="data.company?.hours?.weekday"></p>
-                        <p class="text-sm md:text-base text-gray-400 mt-1" x-text="data.company?.hours?.saturday"></p>
-                    </div>
+                    <a x-show="data.company?.mobile" 
+                       :href="data.company?.mobile ? 'https://wa.me/49' + data.company.mobile.replace(/[^0-9]/g, '').substring(1) : '#'" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       title="Auf WhatsApp schreiben"
+                       class="bg-[#25D366] hover:bg-[#128C7E] text-white p-3 sm:p-4 rounded-full transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:shadow-[0_0_25px_rgba(37,211,102,0.5)] transform hover:-translate-y-1 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                        </svg>
+                    </a>
+                </div>
+                
+                <div class="mb-8 pb-8 border-b border-white/10">
+                    <p class="text-[10px] uppercase text-gray-500 mb-2 tracking-widest font-bold">E-Mail</p>
+                    <a :href="'mailto:' + data.company?.email" class="text-base md:text-lg lg:text-xl text-white hover:text-[var(--accent)] transition font-semibold break-all" x-text="data.company?.email"></a>
+                </div>
+                
+                <div class="pt-4">
+                    <p class="text-[10px] uppercase text-gray-500 mb-4 tracking-widest font-bold">Öffnungszeiten</p>
+                    <p class="text-sm md:text-base text-white mb-2 font-semibold" x-text="data.company?.hours?.weekday"></p>
+                    <p class="text-sm md:text-base text-gray-400" x-text="data.company?.hours?.saturday"></p>
                 </div>
             </div>
 
             <!-- Contact Form -->
-            <div class="glass-strong p-6 sm:p-8 md:p-10 lg:p-12 rounded-2xl order-1 lg:order-2 h-fit">
-                <h3 class="text-xl sm:text-2xl font-bold mb-8 text-white uppercase tracking-wide">
-                    Senden Sie uns eine <span style="color: var(--accent)">Anfrage</span>
-                </h3>
+            <div class="glass p-6 sm:p-8 md:p-10 lg:p-12 rounded-3xl order-1 lg:order-2 h-fit">
+                <h3 class="text-xl sm:text-2xl md:text-3xl font-black mb-8 text-white uppercase">Senden Sie uns eine <span style="color: var(--accent)">Anfrage</span></h3>
                 
-                <div x-show="formSubmitted" x-transition class="mb-6 p-5 rounded-xl" style="background-color: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.3);">
-                    <p class="font-semibold text-sm" style="color: var(--accent);">✓ Vielen Dank für Ihre Anfrage!</p>
-                    <p class="text-xs text-gray-400 mt-1.5">Wir werden Sie in Kürze kontaktieren.</p>
+                <div x-show="formSubmitted" x-transition class="mb-6 p-4 sm:p-6 rounded-xl" style="background-color: rgba(212, 175, 55, 0.1); border: 1px solid var(--accent);">
+                    <p class="text-white font-semibold text-sm sm:text-base" style="color: var(--accent);">✓ Vielen Dank für Ihre Anfrage!</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2">Wir werden Sie in Kürze kontaktieren.</p>
                 </div>
                 
                 <form @submit.prevent="submitForm" class="space-y-4">
                     <div>
                         <input type="text" x-model="formData.name" placeholder="Name *" 
-                               class="w-full bg-white/[0.03] border p-3.5 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm" 
-                               :class="formErrors.name ? 'border-red-500/50' : 'border-white/8'">
-                        <p x-show="formErrors.name" class="text-red-400 text-xs mt-1.5 font-medium" x-text="formErrors.name"></p>
+                               class="w-full bg-white/5 border p-3 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm" 
+                               :class="formErrors.name ? 'border-red-500' : 'border-white/10'">
+                        <p x-show="formErrors.name" class="text-red-500 text-xs mt-1" x-text="formErrors.name"></p>
                     </div>
                     
                     <div>
                         <input type="email" x-model="formData.email" placeholder="E-Mail *" 
-                               class="w-full bg-white/[0.03] border p-3.5 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm" 
-                               :class="formErrors.email ? 'border-red-500/50' : 'border-white/8'">
-                        <p x-show="formErrors.email" class="text-red-400 text-xs mt-1.5 font-medium" x-text="formErrors.email"></p>
+                               class="w-full bg-white/5 border p-3 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm" 
+                               :class="formErrors.email ? 'border-red-500' : 'border-white/10'">
+                        <p x-show="formErrors.email" class="text-red-500 text-xs mt-1" x-text="formErrors.email"></p>
                     </div>
                     
                     <div>
                         <input type="tel" x-model="formData.phone" placeholder="Telefon" 
-                               class="w-full bg-white/[0.03] border border-white/8 p-3.5 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm">
+                               class="w-full bg-white/5 border border-white/10 p-3 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm">
                     </div>
                     
                     <div>
                         <input type="text" x-model="formData.subject" placeholder="Betreff" 
-                               class="w-full bg-white/[0.03] border border-white/8 p-3.5 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm">
+                               class="w-full bg-white/5 border border-white/10 p-3 sm:p-4 rounded-xl focus:border-[var(--accent)] text-white outline-none transition text-sm">
                     </div>
                     
                     <div>
-                        <textarea x-model="formData.message" placeholder="Ihre Nachricht *" 
-                                  class="w-full bg-white/[0.03] border p-3.5 sm:p-4 rounded-xl h-32 focus:border-[var(--accent)] text-white outline-none transition text-sm resize-none" 
-                                  :class="formErrors.message ? 'border-red-500/50' : 'border-white/8'"></textarea>
-                        <p x-show="formErrors.message" class="text-red-400 text-xs mt-1.5 font-medium" x-text="formErrors.message"></p>
+                        <textarea x-model="formData.message" placeholder="Ihre Nachricht (max. 50 Wörter) *" 
+                                  class="w-full bg-white/5 border p-3 sm:p-4 rounded-xl h-32 focus:border-[var(--accent)] text-white outline-none transition text-sm resize-none" 
+                                  :class="formErrors.message ? 'border-red-500' : 'border-white/10'"></textarea>
+                        <div class="flex justify-between text-xs mt-1">
+                            <small class="text-gray-400" x-text="(formData.message.trim() === '' ? 0 : formData.message.trim().split(/\s+/).length) + ' Wörter'"></small>
+                            <small x-show="formErrors.message" class="text-red-500" x-text="formErrors.message"></small>
+                        </div>
                     </div>
                     
-                    <button type="submit" class="btn-gold w-full mt-4">
+                    <button type="submit" style="background-color: var(--accent)" 
+                            class="w-full text-black py-3 sm:py-4 rounded-xl font-bold hover:brightness-110 transition uppercase tracking-widest text-xs sm:text-sm mt-6">
                         Anfrage Absenden
                     </button>
                     
-                    <p class="text-[10px] text-gray-600 text-center mt-3">* Erforderliche Felder</p>
+                    <p class="text-[10px] text-gray-500 text-center mt-4">* Erforderliche Felder</p>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="bg-black pt-16 lg:pt-20 pb-8 px-6 lg:px-16">
-        <div class="footer-border mb-10"></div>
-        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
-            <p class="text-[10px] text-gray-600 uppercase tracking-[0.2em] font-medium" x-text="'© 2026 ' + (data.company?.full || '')"></p>
-            <div class="flex items-center gap-8 text-[10px] uppercase tracking-[0.2em] font-medium">
-                <a href="#" class="text-gray-400 hover:text-[var(--accent)] transition-colors duration-300">Impressum</a>
-                <a href="#" class="text-gray-400 hover:text-[var(--accent)] transition-colors duration-300">Datenschutz</a>
+    <!-- Footer -->
+    <footer class="bg-black pt-16 md:pt-20 lg:pt-32 pb-8 lg:pb-10 px-4 sm:px-6 lg:px-20 border-t border-white/10">
+        <div class="flex flex-col lg:flex-row justify-between items-center gap-4 text-[10px] text-gray-600 uppercase tracking-widest text-center">
+            <p x-text="'© 2026 ' + (data.company?.full || '')"></p>
+            <div class="flex space-x-6 text-white">
+                <a href="impressum.html" class="hover:text-[var(--accent)] transition">Impressum</a>
+                <a href="#" class="hover:text-[var(--accent)] transition">Datenschutz</a>
             </div>
         </div>
     </footer>
